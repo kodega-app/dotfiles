@@ -1,250 +1,132 @@
-# Configuration Documentation
+# Dotfiles
 
-Minimal configuration for DevOps, Go, and Flutter development.
+Modern, high-performance developer dotfiles configured for Linux and macOS.
 
-## Setup
+## Tooling & Language Support
 
-### Theme
-Catppuccin Mocha across all tools (Neovim, Ghostty, tmux)
+| Tool / Language | LSP Server(s) | Formatter(s) | Features |
+| :--- | :--- | :--- | :--- |
+| **Go** | `gopls` | `goimports`, `gofumpt` | Inlay hints, struct tag generation (`GoTagAdd`), `if err != nil` generator (`GoIfErr`), doc comments |
+| **Python** | `pyright` | `isort`, `black` | Type checking, auto-import completions, PEP 8 formatting, virtualenv support |
+| **TypeScript / JS** | `ts_ls` | `prettier` | Inlay hints, TSX/JSX, parameter names, function return hints, auto-imports |
+| **Terraform & OpenTofu** | `terraformls`, `tflint` | `terraform_fmt`, `tofu_fmt` | `.tf`, `.tofu`, `.tfvars`, `.hcl` validation, schemas, and formatting |
+| **JSON / JSONC / JSON5** | `jsonls` | `prettier` | SchemaStore validation (`package.json`, `tsconfig.json`, `.prettierrc`, etc.) |
+| **Markdown** | `marksman` | `prettier` | Heading styling, GitHub callouts (`[!NOTE]`, `[!TIP]`, `[!WARNING]`), Obsidian notes, interactive checkboxes |
+| **Docker & Compose** | `dockerls`, `docker_compose_language_service` | — | Dockerfile & compose validation |
+| **YAML & Helm** | `yamlls`, `helm_ls` | `prettier` | Kubernetes & GitHub Actions schema support, Helm template support |
+| **Bash / Shell** | `bashls` | `shfmt` | Shell script linting and formatting |
+| **Lua** | `lua_ls` | `stylua` | Neovim Lua API completions and type diagnostics |
 
-### Font
-JetBrains Mono 14pt
+---
 
-### Tools
-- Neovim (LazyVim)
-- tmux
-- Ghostty terminal
-- Zsh shell
-
-## Neovim Keybindings
-
-Leader Key: Space
-
-### General
-
-| Key | Mode | Description |
-|-----|------|-------------|
-| jk | Insert | Exit insert mode |
-| Space + nh | Normal | Clear search highlights |
-| Space + sv | Normal | Split window vertically |
-| Space + sh | Normal | Split window horizontally |
-| Space + sx | Normal | Close current split |
-| Tab | Normal | Next buffer |
-| Shift + Tab | Normal | Previous buffer |
-
-### File Explorer (Neo-tree)
-
-| Key | Description |
-|-----|-------------|
-| Space + e | Toggle file explorer |
-| Space + E | Toggle on current file |
-| a | Add file/folder |
-| d | Delete |
-| r | Rename |
-| y | Copy to clipboard |
-| x | Cut to clipboard |
-| p | Paste from clipboard |
-| R | Refresh |
-| ? | Show help |
-
-### Search (Telescope)
-
-| Key | Description |
-|-----|-------------|
-| Space + ff | Find files |
-| Space + fg | Live grep |
-| Space + fb | Find buffers |
-| Space + fh | Find help |
-| Space + fr | Recent files |
-| Space + fp | Find projects |
-| Space + sg | Search in directory |
-
-### Go Development
-
-| Key | Description |
-|-----|-------------|
-| Space + gsj | Add JSON tags to struct |
-| Space + gsy | Add YAML tags to struct |
-| Space + gee | Generate if err != nil |
-| Space + cr | Rename symbol |
-| Space + ca | Code actions |
-
-### Git
-
-| Key | Description |
-|-----|-------------|
-| Space + gg | LazyGit |
-| Space + gd | DiffView |
-| Space + gh | DiffView file history |
-| Space + gb | Git blame line |
-| Space + gs | Git status |
-
-### Kubernetes & DevOps
-
-| Key | Description |
-|-----|-------------|
-| Space + k | Toggle kubectl manager |
-| Space + rr | REST client run request |
-
-### Obsidian Notes
-
-Workspaces: vault, inbox, projects, areas, resources, archive
-
-| Key | Description |
-|-----|-------------|
-| Space + ow | Switch workspace |
-| Space + od | Today's daily note |
-| Space + on | New note (select workspace + template) |
-| Space + onp | New project |
-| Space + onm | New meeting |
-| Space + onl | New learning |
-| Space + of | Find notes |
-| Space + os | Search notes |
-| Space + ol | Follow link |
-| Space + ox | Toggle checkbox |
-| Space + oti | Insert template |
-
-### Terminal
-
-| Key | Mode | Description |
-|-----|------|-------------|
-| Space + tt | Normal | Toggle terminal |
-| Space + tv | Normal | Toggle vertical terminal |
-| jk | Terminal | Exit terminal mode |
-| Ctrl + h/j/k/l | Terminal | Navigate to window |
-
-### LSP
-
-| Key | Description |
-|-----|-------------|
-| gd | Go to definition |
-| gr | Go to references |
-| gi | Go to implementation |
-| K | Hover documentation |
-| Space + ca | Code actions |
-| Space + cr | Rename symbol |
-| Space + cf | Format code |
-| [d | Previous diagnostic |
-| ]d | Next diagnostic |
-| Space + cd | Show diagnostics |
-
-### Window Navigation
-
-| Key | Description |
-|-----|-------------|
-| Ctrl + h | Move to left window |
-| Ctrl + j | Move to bottom window |
-| Ctrl + k | Move to top window |
-| Ctrl + l | Move to right window |
-| Ctrl + Up | Increase window height |
-| Ctrl + Down | Decrease window height |
-| Ctrl + Left | Decrease window width |
-| Ctrl + Right | Increase window width |
-
-## tmux Keybindings
-
-Prefix Key: Ctrl + a
-
-### Sessions
-
-| Key | Action |
-|-----|--------|
-| Ctrl + a d | Detach from session |
-| Ctrl + a $ | Rename session |
-| Ctrl + a s | List sessions |
-
-### Windows
-
-| Key | Action |
-|-----|--------|
-| Ctrl + a c | Create new window |
-| Ctrl + a , | Rename window |
-| Ctrl + a & | Close window |
-| Shift + Left | Previous window (no prefix) |
-| Shift + Right | Next window (no prefix) |
-| Ctrl + a 0-9 | Switch to window number |
-| Ctrl + a w | List windows |
-
-### Panes
-
-| Key | Action |
-|-----|--------|
-| Ctrl + a \| | Split vertically |
-| Ctrl + a - | Split horizontally |
-| Ctrl + a x | Close pane |
-| Alt + Arrow | Switch panes (no prefix) |
-| Ctrl + a h/j/k/l | Switch panes (vim keys) |
-| Ctrl + a H/J/K/L | Resize pane |
-| Ctrl + a z | Zoom/unzoom pane |
-| Ctrl + a { | Move pane left |
-| Ctrl + a } | Move pane right |
-
-### Copy Mode
-
-| Key | Action |
-|-----|--------|
-| Ctrl + a [ | Enter copy mode |
-| v | Start selection |
-| y | Copy selection |
-| q | Exit copy mode |
-| Ctrl + a ] | Paste |
-
-### Utilities
-
-| Key | Action |
-|-----|--------|
-| Ctrl + a r | Reload config |
-| Ctrl + a ? | List all keybindings |
-| Ctrl + a t | Show time |
-| Ctrl + a : | Enter command mode |
-
-## Installation
-
-### Install essentials
-```bash
-~/.config/install-essentials.sh
-```
-
-### Configure shell
-```bash
-echo "source ~/.config/shell-config-minimal.zsh" >> ~/.zshrc
-source ~/.zshrc
-```
-
-### Create tmux symlink
-```bash
-ln -sf ~/.config/tmux/tmux.conf ~/.tmux.conf
-```
-
-### Launch Neovim
-```bash
-nvim
-```
-
-## File Locations
-
-- Neovim: `~/.config/nvim/`
-- tmux: `~/.config/tmux/tmux.conf`
-- Ghostty: `~/.config/ghostty/config`
-- Shell: `~/.config/shell-config-minimal.zsh`
-
-## Version Managers
-
-- tfenv: Terraform version management
-- nvm: Node.js version management
-
-## Notes Structure (PARA)
+## Directory Structure
 
 ```
-~/Documents/workspace/khadga/notes/
-├── 0-Inbox/
-│   └── daily/
-├── 1-Projects/
-├── 2-areas/
-├── 3-resources/
-└── 4-archive/
+~/dotfiles/
+├── nvim/                   # Neovim configuration (Lazy.nvim, Treesitter, LSP, Conform)
+│   ├── init.lua
+│   ├── lazy-lock.json
+│   └── lua/kode/
+│       ├── core/           # Options, Keymaps, Autocmds
+│       └── plugins/        # LSP, Completion, Treesitter, Formatting, UI, etc.
+├── tmux/                   # Tmux configuration (tmux.conf)
+├── kitty/                  # Kitty terminal emulator configuration
+├── lazygit/                # LazyGit configuration
+├── mise/                   # Mise tool version manager config (Go, Node, Python, Tofu, Terraform)
+├── ghostty/                # Ghostty terminal config & themes
+├── zsh/                    # Zsh shell configuration (.zshrc)
+├── bash/                   # Bash configuration (.bashrc, .profile)
+├── install.sh              # Dotfiles symlink & setup script
+└── install-essentials.sh   # System dependency bootstrap script
 ```
 
 ---
 
-Configuration optimized for DevOps, Go, and Flutter development on macOS.
+## Installation
+
+Clone the repository and run the setup script:
+
+```bash
+git clone git@github.com:kodega2016/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh
+```
+
+---
+
+## Keybindings Reference
+
+### Neovim
+
+Leader Key: `Space` (`<leader>`)
+
+#### General & Navigation
+| Key | Mode | Description |
+| :--- | :--- | :--- |
+| `<leader>w` | Normal | Save current buffer |
+| `<leader>q` | Normal | Quit current window |
+| `<leader>x` | Normal | Save and quit |
+| `<leader>sv` / `<leader>sh` | Normal | Split window vertically / horizontally |
+| `<leader>se` / `<leader>sx` | Normal | Make splits equal / close current split |
+| `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` | Normal | Seamless Vim & Tmux pane navigation |
+| `<S-h>` / `<S-l>` | Normal | Previous / next buffer |
+| `<leader>bd` | Normal | Close current buffer |
+
+#### Search & Explorer
+| Key | Mode | Description |
+| :--- | :--- | :--- |
+| `<leader>e` | Normal | Toggle File Explorer (nvim-tree) |
+| `<leader>ef` | Normal | Reveal current file in explorer |
+| `<leader>ff` | Normal | Find files (Telescope) |
+| `<leader>fg` | Normal | Live grep search |
+| `<leader>fb` | Normal | Find open buffers |
+| `<leader>fr` | Normal | Find recent files |
+
+#### LSP & Code Intelligence
+| Key | Mode | Description |
+| :--- | :--- | :--- |
+| `gd` | Normal | Go to definition |
+| `gD` | Normal | Go to declaration |
+| `gi` | Normal | Go to implementation |
+| `gr` | Normal | Find references |
+| `K` | Normal | Hover documentation & signatures |
+| `<leader>rn` | Normal | Rename symbol |
+| `<leader>ca` | Normal/Visual | Code actions (with diff preview) |
+| `<leader>fm` | Normal/Visual | Format buffer or selection |
+| `<leader>d` | Normal | Show line diagnostics |
+| `]d` / `[d` | Normal | Next / previous diagnostic |
+| `<leader>xx` | Normal | Toggle workspace diagnostics (Trouble) |
+
+#### Golang Specific
+| Key | Mode | Description |
+| :--- | :--- | :--- |
+| `<leader>gsj` | Normal | Add JSON struct tags |
+| `<leader>gsy` | Normal | Add YAML struct tags |
+| `<leader>grm` | Normal | Remove struct tags |
+| `<leader>gie` | Normal | Generate `if err != nil` |
+| `<leader>gc` | Normal | Generate doc comment |
+
+#### Git, Notes & Terminal
+| Key | Mode | Description |
+| :--- | :--- | :--- |
+| `<leader>gg` | Normal | Open LazyGit |
+| `<C-\>` | Normal/Term | Toggle terminal |
+| `<leader>ch` | Normal | Toggle Markdown / Obsidian checkbox |
+| `<leader>cc` | Normal | Toggle Copilot Chat |
+
+---
+
+### Tmux
+
+Prefix Key: `Ctrl + a`
+
+| Key | Description |
+| :--- | :--- |
+| `Prefix + \|` | Split window vertically |
+| `Prefix + -` | Split window horizontally |
+| `Prefix + h/j/k/l` | Navigate panes |
+| `Prefix + z` | Zoom / unzoom pane |
+| `Prefix + c` | Create new window |
+| `Prefix + ,` | Rename window |
+| `Prefix + x` | Close current pane |
+| `Prefix + r` | Reload tmux configuration |
