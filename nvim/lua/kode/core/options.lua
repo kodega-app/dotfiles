@@ -73,13 +73,16 @@ vim.filetype.add({
   },
 })
 
--- Ensure PATH includes mise shims, mise binaries, Go binaries, and local bin
+-- Ensure PATH includes mise shims, homebrew paths, Go binaries, and local user bin
 local extra_paths = {
   vim.fn.expand("~/.local/share/mise/shims"),
-  vim.fn.expand("~/.local/share/mise/installs/go/1.26.5/bin"),
-  vim.fn.expand("~/.local/share/mise/installs/node/lts/bin"),
   vim.fn.expand("~/go/bin"),
   vim.fn.expand("~/.local/bin"),
+  "/opt/homebrew/bin",
+  "/opt/homebrew/sbin",
+  "/usr/local/bin",
+  "/usr/local/sbin",
+  "/home/linuxbrew/.linuxbrew/bin",
 }
 
 for _, p in ipairs(extra_paths) do

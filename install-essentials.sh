@@ -1,109 +1,82 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# =============================================================================
+# Cross-Platform Developer Setup Script (macOS & Linux)
+# Sets up Homebrew, Mise, Neovim, Tmux, Terminal, and Development Toolchains
+# =============================================================================
+set -euo pipefail
 
-# Essential macOS Setup Script
-# For DevOps, Go, and Flutter Development
+echo "=========================================="
+echo " Starting Developer Environment Setup"
+echo "=========================================="
 
-echo "Starting minimal macOS setup..."
-echo ""
+OS="$(uname -s)"
+case "$OS" in
+    Darwin)
+        PLATFORM="macos"
+        ;;
+    Linux)
+        PLATFORM="linux"
+        ;;
+    *)
+        echo "Unsupported operating system: $OS"
+        exit 1
+        ;;
+esac
 
-# Check if Homebrew is installed
+echo "Detected OS: $PLATFORM ($OS)"
+
+# -----------------------------------------------------------------------------
+# 1. Package Manager (Homebrew)
+# -----------------------------------------------------------------------------
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    if [ -x "/opt/homebrew/bin/brew" ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
 else
     echo "Homebrew already installed"
 fi
 
-echo ""
-echo "Installing essential tools..."
-echo ""
+# -----------------------------------------------------------------------------
+# 2. Core CLI Tools
+# -----------------------------------------------------------------------------
+echo "Installing core CLI tools..."
+brew install git curl wget ripgrep fd fzf bat tree-sitter neovim tmux lazygit mise fastfetch
 
-# Development tools
-echo "Installing development tools..."
-brew install git go python3
+# -----------------------------------------------------------------------------
+# 3. Development Toolchains via Mise
+# -----------------------------------------------------------------------------
+echo "Setting up Mise toolchains (Go, Node, Python, Terraform, OpenTofu, UV)..."
+eval "$(mise activate bash)"
+mise install -y
 
-# Note: Node managed by nvm (skipping)
-echo "Skipping node (managed by nvm)"
-
-# Go tools
-echo "Installing Go tools..."
+# -----------------------------------------------------------------------------
+# 4. Go Development Tools
+# -----------------------------------------------------------------------------
+echo "Installing Go developer tools..."
 go install golang.org/x/tools/gopls@latest
 go install github.com/go-delve/delve/cmd/dlv@latest
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+go install github.com/fatih/gomodifytags@latest
+go install github.com/josharian/impl@latest
+go install github.com/koron/iferr@latest
+go install github.com/cweill/gotests/...@latest
 
-# DevOps tools
-echo "Installing DevOps tools..."
-brew install kubectl kubectx k9s ansible docker
-brew install jq yq htop btop wget curl httpie
+# Reshim mise
+mise reshim
 
-# Note: Terraform managed by tfenv (skipping)
-echo "Skipping terraform (managed by tfenv)"
-
-# Note: Helm already installed (skipping)
-echo "Skipping helm (already installed)"
-
-# Note: Flutter already installed (skipping)
-echo "Skipping flutter (already installed)"
-
-# Terminal tools
-echo "Installing terminal tools..."
-brew install tmux neovim lazygit
-
-# Productivity
-echo "Installing productivity tools..."
-brew install --cask rectangle raycast
-
-# Optional: VS Code for Flutter
-read -p "Install VS Code? (y/n) " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew install --cask visual-studio-code
-fi
-
-# Font
-echo "Installing JetBrains Mono font..."
-brew install --cask font-jetbrains-mono
+# -----------------------------------------------------------------------------
+# 5. Link Dotfiles
+# -----------------------------------------------------------------------------
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+echo "Linking dotfiles from $DOTFILES_DIR..."
+"$DOTFILES_DIR/install.sh"
 
 echo ""
-echo "Configuring macOS settings..."
-echo ""
-
-# Dock settings
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.5
-defaults write com.apple.dock minimize-to-application -bool true
-defaults write com.apple.dock show-recents -bool false
-
-# Finder settings
-defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-
-# Keyboard settings
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
-
-# Mission Control
-defaults write com.apple.dock expose-animation-duration -float 0.1
-defaults write com.apple.dock mru-spaces -bool false
-
-echo ""
-echo "Restarting Dock and Finder..."
-killall Dock
-killall Finder
-
-echo ""
-echo "Setup complete!"
-echo ""
-echo "Next steps:"
-echo "1. Restart Ghostty to apply font changes"
-echo "2. Configure Rectangle keyboard shortcuts"
-echo "3. Set up Raycast preferences"
-echo "4. Install Flutter dependencies: flutter doctor"
-echo "5. Configure Git: git config --global user.name 'Your Name'"
-echo "6. Configure Git: git config --global user.email 'your@email.com'"
-echo ""
-echo "See MAC_SETUP.md for detailed configuration"
-
+echo "=========================================="
+echo " Setup complete!"
+echo " Restart your terminal or run: source ~/.zshrc"
+echo "=========================================="
