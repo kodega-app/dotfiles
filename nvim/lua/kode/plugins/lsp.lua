@@ -1,7 +1,7 @@
 return {
   {
     "williamboman/mason.nvim",
-    cmd = "Mason",
+    cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonUninstall", "MasonLog" },
     build = ":MasonUpdate",
     opts = {
       ui = {
@@ -12,6 +12,28 @@ return {
           package_uninstalled = "✗",
         },
       },
+    },
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    event = "VeryLazy",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        -- Formatters & Linters
+        "prettier",
+        "stylua",
+        "black",
+        "isort",
+        "shfmt",
+        "goimports",
+        "gofumpt",
+        "markdownlint-cli2",
+        "tree-sitter-cli",
+      },
+      auto_update = false,
+      run_on_start = true,
+      start_delay = 1000,
     },
   },
   {
@@ -26,6 +48,33 @@ return {
       local mason_lspconfig = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
+
+      -- Diagnostic display setup
+      vim.diagnostic.config({
+        virtual_text = {
+          prefix = "●",
+          spacing = 4,
+        },
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "✘",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.HINT] = "⚑",
+            [vim.diagnostic.severity.INFO] = "»",
+          },
+        },
+        update_in_insert = false,
+        underline = true,
+        severity_sort = true,
+        float = {
+          focused = false,
+          style = "minimal",
+          border = "rounded",
+          source = "always",
+          header = "",
+          prefix = "",
+        },
+      })
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 

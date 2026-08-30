@@ -4,4 +4,8 @@ node = "lts"
 opentofu = "latest"
 python = "3.13"
 terraform = "latest"
+tree-sitter = "latest"
 uv = "latest"
+
+[settings]
+experimental = true

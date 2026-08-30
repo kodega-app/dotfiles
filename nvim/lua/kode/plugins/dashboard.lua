@@ -15,17 +15,33 @@ return {
           "  ██║  ██╗╚██████╔╝██████╔╝███████╗╚██████╔╝██║  ██║",
           "  ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝",
           "",
-          "  ⚡ KODEGA AUTOMATION & DEVELOPMENT ENVIRONMENT ⚡",
+          "       ⚡ AUTOMATION & DEVELOPMENT ENVIRONMENT ⚡",
           "",
         },
         center = {
           {
-            icon = "  ",
+            icon = "  ",
             icon_hl = "Title",
-            desc = "Terminal                  ",
-            key = "t",
+            desc = "Find File                 ",
+            key = "f",
             key_hl = "Number",
-            action = "ToggleTerm",
+            action = "Telescope find_files",
+          },
+          {
+            icon = "󰊄  ",
+            icon_hl = "Title",
+            desc = "Live Grep                 ",
+            key = "g",
+            key_hl = "Number",
+            action = "Telescope live_grep",
+          },
+          {
+            icon = "  ",
+            icon_hl = "Title",
+            desc = "Recent Files              ",
+            key = "r",
+            key_hl = "Number",
+            action = "Telescope oldfiles",
           },
           {
             icon = "  ",
@@ -36,14 +52,6 @@ return {
             action = "LazyGit",
           },
           {
-            icon = "󰒲  ",
-            icon_hl = "Title",
-            desc = "Plugin Manager (Lazy)     ",
-            key = "l",
-            key_hl = "Number",
-            action = "Lazy",
-          },
-          {
             icon = "📓 ",
             icon_hl = "Title",
             desc = "Obsidian Notes            ",
@@ -52,12 +60,12 @@ return {
             action = "ObsidianSearch",
           },
           {
-            icon = "⚙  ",
+            icon = "󰒲  ",
             icon_hl = "Title",
-            desc = "Nvim Configuration        ",
-            key = "c",
+            desc = "Plugins (Lazy)            ",
+            key = "l",
             key_hl = "Number",
-            action = "edit ~/.config/nvim/init.lua",
+            action = "Lazy",
           },
           {
             icon = "󰩈  ",
@@ -82,3 +90,4 @@ return {
     })
   end,
 }
+

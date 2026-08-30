@@ -124,3 +124,6 @@ eval "$(mise activate bash)"
 # Added by Antigravity CLI installer
 export PATH="/home/kode/.local/bin:$PATH"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/kode/.lmstudio/bin"

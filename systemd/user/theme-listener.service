@@ -1,0 +1,16 @@
+[Unit]
+Description=Dynamic Light/Dark Theme Synchronizer for Kitty, Tmux, and Neovim
+Documentation=https://github.com/kodega2016/dotfiles
+After=graphical-session.target xdg-desktop-portal.service
+
+[Service]
+Type=simple
+ExecStart=/home/kode/dotfiles/scripts/theme-manager.sh listen
+Restart=always
+RestartSec=3
+Environment=PATH=/home/kode/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=XDG_CONFIG_HOME=%h/.config
+Environment=XDG_CACHE_HOME=%h/.cache
+
+[Install]
+WantedBy=default.target

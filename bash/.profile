@@ -30,3 +30,10 @@ fi
 # Added by Antigravity CLI installer
 export PATH="/home/kode/.local/share/mise/shims:/home/kode/go/bin:/home/kode/.local/bin:$PATH"
 
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/kode/.local/bin:$PATH"
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/kode/.lmstudio/bin"

@@ -1,0 +1,115 @@
+# ==============================================================================
+# Starship Prompt Configuration
+# Minimal, Clean & Professional Developer Prompt (Catppuccin Mocha Palette)
+# ==============================================================================
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$os$directory$git_branch$git_status$c$golang$nodejs$python$rust$terraform$docker_context$cmd_duration
+$character"""
+
+# Insert a blank line between prompts for visual breathing room
+add_newline = true
+
+# ------------------------------------------------------------------------------
+# Character (Prompt Symbol)
+# ------------------------------------------------------------------------------
+[character]
+success_symbol = "[❯](bold #89b4fa)"
+error_symbol = "[❯](bold #f38ba8)"
+vimcmd_symbol = "[❮](bold #a6e3a1)"
+vimcmd_replace_one_symbol = "[❮](bold #cba6f7)"
+vimcmd_replace_symbol = "[❮](bold #cba6f7)"
+vimcmd_visual_symbol = "[❮](bold #f9e2af)"
+
+# ------------------------------------------------------------------------------
+# Directory
+# ------------------------------------------------------------------------------
+[directory]
+style = "bold #89b4fa"
+read_only = " 󰌾"
+read_only_style = "bold #f38ba8"
+truncation_length = 4
+truncate_to_repo = true
+truncation_symbol = "…/"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+# ------------------------------------------------------------------------------
+# Git Integration
+# ------------------------------------------------------------------------------
+[git_branch]
+symbol = "󰘬 "
+style = "bold #cba6f7"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #f9e2af"
+format = "([$all_status$ahead_behind]($style) )"
+conflicted = "🏳 "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+# ------------------------------------------------------------------------------
+# Programming Languages & Tools (Clean, Context-Aware)
+# ------------------------------------------------------------------------------
+[golang]
+symbol = "󰟓 "
+style = "bold #89dceb"
+format = "via [$symbol($version)]($style) "
+
+[python]
+symbol = " "
+style = "bold #f9e2af"
+format = "via [${symbol}${pyenv_prefix}(${version})]($style) "
+
+[nodejs]
+symbol = "󰎙 "
+style = "bold #a6e3a1"
+format = "via [$symbol($version)]($style) "
+
+[rust]
+symbol = "󱘗 "
+style = "bold #fab387"
+format = "via [$symbol($version)]($style) "
+
+[c]
+symbol = " "
+style = "bold #89b4fa"
+format = "via [$symbol($version)]($style) "
+
+[terraform]
+symbol = "󱁢 "
+style = "bold #b4befe"
+format = "via [$symbol$workspace]($style) "
+
+[docker_context]
+symbol = "󰡨 "
+style = "bold #74c7ec"
+format = "via [$symbol$context]($style) "
+
+# ------------------------------------------------------------------------------
+# Command Duration
+# ------------------------------------------------------------------------------
+[cmd_duration]
+min_time = 2_000
+style = "bold #6c7086"
+format = "took [$duration]($style) "
+
+# ------------------------------------------------------------------------------
+# Disabled Modules (Minimalism)
+# ------------------------------------------------------------------------------
+[package]
+disabled = true
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true

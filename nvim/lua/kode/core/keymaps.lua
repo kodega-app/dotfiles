@@ -74,15 +74,21 @@ map({ "n", "t" }, "<C-\\>", "<cmd>ToggleTerm<CR>", { desc = "Toggle Terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
 
 -- -----------------------------------------------------------------------------
--- 9. Formatting (conform.nvim)
+-- 9. Formatting & Toggles (conform.nvim)
 -- -----------------------------------------------------------------------------
 map({ "n", "v" }, "<leader>fm", function()
   require("conform").format({
-    lsp_fallback = true,
+    lsp_format = "fallback",
     async = false,
-    timeout_ms = 1000,
+    timeout_ms = 1500,
   })
 end, { desc = "Format Buffer or Selection" })
+
+map("n", "<leader>uf", "<cmd>FormatToggle<CR>", { desc = "Toggle Autoformat on Save (Global)" })
+map("n", "<leader>uF", "<cmd>FormatToggle!<CR>", { desc = "Toggle Autoformat on Save (Buffer)" })
+map("n", "<leader>ut", "<cmd>ThemeToggle<CR>", { desc = "Toggle Light / Dark Theme" })
+
+
 
 -- -----------------------------------------------------------------------------
 -- 10. LSP (Language Server Protocol)

@@ -21,11 +21,20 @@ echo "Linking Tmux config..."
 mkdir -p "$CONFIG_DIR/tmux"
 ln -sf "$DOTFILES_DIR/tmux/tmux.conf" "$CONFIG_DIR/tmux/tmux.conf"
 ln -sf "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
+ln -sfn "$DOTFILES_DIR/tmux/themes" "$CONFIG_DIR/tmux/themes"
 
 # 3. Kitty
 echo "Linking Kitty config..."
 mkdir -p "$CONFIG_DIR/kitty"
 ln -sf "$DOTFILES_DIR/kitty/kitty.conf" "$CONFIG_DIR/kitty/kitty.conf"
+ln -sf "$DOTFILES_DIR/kitty/current-theme.conf" "$CONFIG_DIR/kitty/current-theme.conf"
+ln -sfn "$DOTFILES_DIR/kitty/themes" "$CONFIG_DIR/kitty/themes"
+
+# Helper scripts
+mkdir -p "$HOME/.local/bin"
+ln -sf "$DOTFILES_DIR/scripts/theme-manager.sh" "$HOME/.local/bin/theme-manager"
+ln -sf "$DOTFILES_DIR/scripts/theme-manager.sh" "$HOME/.local/bin/switch-theme"
+
 
 # 4. LazyGit
 echo "Linking LazyGit config..."
@@ -44,13 +53,32 @@ if [ -d "$DOTFILES_DIR/ghostty" ]; then
     ln -sf "$DOTFILES_DIR/ghostty/config" "$CONFIG_DIR/ghostty/config"
 fi
 
-# 7. Shell configs
+# 7. Starship prompt
+if [ -f "$DOTFILES_DIR/starship/starship.toml" ]; then
+    echo "Linking Starship config..."
+    ln -sf "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml"
+fi
+
+# 8. Shell configs
 echo "Linking Shell configs..."
 ln -sf "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
 ln -sf "$DOTFILES_DIR/bash/.profile" "$HOME/.profile"
 
+# 9. Systemd User Services (Auto Theme Synchronizer)
+if command -v systemctl &>/dev/null && [ -d "$DOTFILES_DIR/systemd/user" ]; then
+    echo "Configuring Theme Synchronizer background service..."
+    mkdir -p "$CONFIG_DIR/systemd/user"
+    ln -sf "$DOTFILES_DIR/systemd/user/theme-listener.service" "$CONFIG_DIR/systemd/user/theme-listener.service"
+    systemctl --user daemon-reload 2>/dev/null || true
+    systemctl --user enable --now theme-listener.service 2>/dev/null || true
+fi
+
+# Run initial theme sync based on current system appearance
+"$DOTFILES_DIR/scripts/theme-manager.sh" auto false 2>/dev/null || true
+
 echo ""
 echo "=========================================="
 echo " Dotfiles setup complete!"
 echo "=========================================="
+

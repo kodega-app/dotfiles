@@ -1,6 +1,14 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
 
 plugins=(
     git
@@ -21,6 +29,7 @@ fi
 
 # PATH setup
 export PATH="$HOME/.local/share/mise/shims:$HOME/.local/bin:$HOME/go/bin:$PATH"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 # Mise version manager activation
 if command -v mise &> /dev/null; then
@@ -42,3 +51,17 @@ fi
 
 # Display fastfetch if installed
 command -v fastfetch &> /dev/null && fastfetch
+
+# Starship prompt
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# Added by Antigravity CLI installer
+export PATH="/home/kode/.local/bin:$PATH"
+
+# Added by LM Studio CLI tool (lms)
+export PATH="$PATH:/home/kode/.lmstudio/bin"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

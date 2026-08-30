@@ -73,8 +73,9 @@ vim.filetype.add({
   },
 })
 
--- Ensure PATH includes mise shims, homebrew paths, Go binaries, and local user bin
+-- Ensure PATH includes mason bin, mise shims, homebrew paths, Go binaries, and local user bin
 local extra_paths = {
+  vim.fn.expand("~/.local/share/nvim/mason/bin"),
   vim.fn.expand("~/.local/share/mise/shims"),
   vim.fn.expand("~/go/bin"),
   vim.fn.expand("~/.local/bin"),
@@ -90,5 +91,6 @@ for _, p in ipairs(extra_paths) do
     vim.env.PATH = p .. ":" .. (vim.env.PATH or "")
   end
 end
+
 
 
