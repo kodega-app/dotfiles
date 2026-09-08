@@ -59,6 +59,26 @@ if [ -f "$DOTFILES_DIR/starship/starship.toml" ]; then
     ln -sf "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml"
 fi
 
+# 8. Window Manager & Desktop (i3, Polybar, Rofi)
+if [ -d "$DOTFILES_DIR/i3" ]; then
+    echo "Linking i3 config..."
+    ln -sfn "$DOTFILES_DIR/i3" "$CONFIG_DIR/i3"
+fi
+if [ -d "$DOTFILES_DIR/polybar" ]; then
+    echo "Linking Polybar config..."
+    ln -sfn "$DOTFILES_DIR/polybar" "$CONFIG_DIR/polybar"
+fi
+if [ -d "$DOTFILES_DIR/rofi" ]; then
+    echo "Linking Rofi config..."
+    ln -sfn "$DOTFILES_DIR/rofi" "$CONFIG_DIR/rofi"
+fi
+if [ -d "$DOTFILES_DIR/fontconfig" ]; then
+    echo "Linking Fontconfig config..."
+    ln -sfn "$DOTFILES_DIR/fontconfig" "$CONFIG_DIR/fontconfig"
+    mkdir -p "$HOME/.local/share/fonts"
+    ln -sfn "$HOME/.local/share/fonts" "$HOME/.fonts"
+fi
+
 # 8. Shell configs
 echo "Linking Shell configs..."
 ln -sf "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"

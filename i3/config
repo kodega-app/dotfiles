@@ -1,0 +1,146 @@
+# i3 config file (v4)
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+
+# Font for window titles and bar.
+font pango:GeistMono Nerd Font 10
+
+# Use Mouse+$mod to drag floating windows to their desired position
+floating_modifier $mod
+
+# --- Window Gaps ---
+gaps inner 8
+gaps outer 4
+
+# --- Window Borders & Titlebars ---
+default_border pixel 2
+default_floating_border pixel 2
+
+# --- Catppuccin Mocha Color Theme ---
+# class                 border  bground text    indicator child_border
+client.focused          #89b4fa #1e1e2e #cdd6f4 #b4befe   #89b4fa
+client.focused_inactive #313244 #1e1e2e #a6adc8 #45475a   #313244
+client.unfocused        #1e1e2e #1e1e2e #6c7086 #313244   #181825
+client.urgent           #f38ba8 #1e1e2e #f38ba8 #fab387   #f38ba8
+client.placeholder      #181825 #181825 #cdd6f4 #181825   #181825
+client.background       #1e1e2e
+
+
+# --- Core Toolchain Keybindings ---
+bindsym $mod+Return exec kitty
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+b exec env MOZ_X11_EGL=1 firefox-esr
+bindsym $mod+o exec obsidian
+bindsym $mod+Escape exec --no-startup-id i3lock -c 1e1e2e
+
+# --- Screenshots (scrot + clipboard) ---
+bindsym Print exec --no-startup-id "mkdir -p ~/Pictures/Screenshots && scrot ~/Pictures/Screenshots/'%Y-%m-%d-%T.png' -e 'xclip -selection clipboard -t image/png -i \$f'"
+bindsym $mod+Shift+s exec --no-startup-id "mkdir -p ~/Pictures/Screenshots && scrot -s ~/Pictures/Screenshots/'%Y-%m-%d-%T.png' -e 'xclip -selection clipboard -t image/png -i \$f'"
+
+
+# --- Audio Volume Controls ---
+bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i 5
+bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d 5
+bindsym XF86AudioMute exec --no-startup-id pamixer -t
+
+# --- Window Focus & Navigation ---
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# --- Move Focused Window ---
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# --- Layout & Splits ---
+bindsym $mod+h split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# --- Tiling / Floating Toggles ---
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+# --- Workspaces ---
+bindsym $mod+1 workspace 1:dev
+bindsym $mod+2 workspace 2:ops
+bindsym $mod+3 workspace 3:web
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+bindsym $mod+Shift+1 move container to workspace 1:dev
+bindsym $mod+Shift+2 move container to workspace 2:ops
+bindsym $mod+Shift+3 move container to workspace 3:web
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+# --- i3 Session Management ---
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3 session?' -B 'Yes, exit' 'i3-msg exit'"
+
+# --- Resize Mode ---
+mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# --- Floating Window Rules ---
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+for_window [class="Blueman-manager"] floating enable, resize set 750 500
+for_window [class="Pavucontrol"] floating enable, resize set 750 500
+
+# --- Autostart Daemons ---
+exec_always --no-startup-id pkill -x autotiling; autotiling &
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id feh --bg-scale ~/Documents/wallpaper.jpg
+exec --no-startup-id blueman-applet
+exec --no-startup-id picom --backend xrender -b
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 1e1e2e
+

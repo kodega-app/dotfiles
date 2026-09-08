@@ -1,0 +1,82 @@
+configuration {
+    modi: "drun,run,window";
+    font: "GeistMono Nerd Font 11";
+    show-icons: true;
+    display-drun: "APPS";
+    display-run: "RUN";
+    display-window: "WINDOW";
+    drun-display-format: "{name}";
+}
+
+* {
+    bg: #1e1e2e;
+    bg-alt: #313244;
+    fg: #cdd6f4;
+    fg-alt: #6c7086;
+    primary: #89b4fa;
+    border-col: #89b4fa;
+
+    background-color: transparent;
+    text-color: @fg;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    width: 650px;
+    background-color: @bg;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+mainbox {
+    children: [inputbar, listview];
+    spacing: 12px;
+}
+
+inputbar {
+    children: [prompt, entry];
+    background-color: @bg-alt;
+    border-radius: 6px;
+    padding: 8px 12px;
+    spacing: 10px;
+}
+
+prompt {
+    text-color: @primary;
+    font: "GeistMono Nerd Font Bold 11";
+}
+
+entry {
+    placeholder: "Search applications...";
+    placeholder-color: @fg-alt;
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    spacing: 4px;
+}
+
+element {
+    padding: 8px 12px;
+    border-radius: 6px;
+    spacing: 10px;
+}
+
+element selected {
+    background-color: @primary;
+    text-color: @bg;
+}
+
+element-icon {
+    size: 24px;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}

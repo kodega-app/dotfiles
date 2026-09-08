@@ -16,24 +16,24 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
+# User private bin directories
+if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+if [ -d "$HOME/go/bin" ]; then
+    PATH="$HOME/go/bin:$PATH"
+fi
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+    PATH="$HOME/.local/share/mise/shims:$PATH"
+fi
+if [ -d "$HOME/.lmstudio/bin" ]; then
+    PATH="$PATH:$HOME/.lmstudio/bin"
+fi
+export PATH
 
+# Hardware-accelerated EGL for Firefox on X11 / VideoCore VII (Pi 5)
+export MOZ_X11_EGL=1
 
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/share/mise/shims:/home/kode/go/bin:/home/kode/.local/bin:$PATH"
-
-
-
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/bin:$PATH"
-
-# Added by LM Studio CLI tool (lms)
-export PATH="$PATH:/home/kode/.lmstudio/bin"

@@ -116,14 +116,14 @@ if ! shopt -oq posix; then
   fi
 fi
 fastfetch
-eval "$(/home/kode/.local/bin/mise activate bash)"
-export PATH="$HOME/.local/bin:$PATH"
-eval "$(mise activate bash)"
 
+# Homebrew environment
+if [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Mise version manager activation
+if command -v mise &>/dev/null; then
+    eval "$(mise activate bash)"
+fi
 
-# Added by LM Studio CLI tool (lms)
-export PATH="$PATH:/home/kode/.lmstudio/bin"
