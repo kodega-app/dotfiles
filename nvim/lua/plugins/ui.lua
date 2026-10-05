@@ -1,48 +1,52 @@
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "craftzdog/solarized-osaka.nvim",
     lazy = false,
     priority = 1000,
     opts = {
-      flavour = "auto",
-      background = {
-        light = "latte",
-        dark = "mocha",
+      transparent = true,
+      terminal_colors = true,
+      styles = {
+        comments = { italic = true },
+        keywords = { italic = true },
+        functions = {},
+        variables = {},
+        sidebars = "transparent",
+        floats = "transparent",
       },
-      transparent_background = true,
-      term_colors = true,
-      integrations = {
-        cmp = true,
-        gitsigns = true,
-        nvimtree = true,
-        telescope = {
-          enabled = true,
-          style = "nvchad",
-        },
-        which_key = true,
-        treesitter = true,
-        bufferline = true,
-        render_markdown = true,
-        native_lsp = {
-          enabled = true,
-          virtual_text = {
-            errors = { "italic" },
-            hints = { "italic" },
-            warnings = { "italic" },
-            information = { "italic" },
-          },
-          underlines = {
-            errors = { "underline" },
-            hints = { "underline" },
-            warnings = { "underline" },
-            information = { "underline" },
-          },
-        },
-      },
+      sidebars = { "qf", "help", "terminal", "nvim-tree" },
+      day_brightness = 0.3,
+      hide_inactive_statusline = false,
+      dim_inactive = false,
+      lualine_bold = true,
+      on_highlights = function(hl, c)
+        hl.NormalFloat = { bg = "NONE" }
+        hl.FloatBorder = { fg = c.blue, bg = "NONE" }
+        hl.FloatTitle = { fg = c.cyan, bg = "NONE", bold = true }
+        hl.NvimTreeNormal = { bg = "NONE" }
+        hl.NvimTreeNormalNC = { bg = "NONE" }
+        hl.NvimTreeWinSeparator = { fg = c.base02 or c.border, bg = "NONE" }
+        hl.TelescopeNormal = { bg = "NONE" }
+        hl.TelescopeBorder = { fg = c.blue, bg = "NONE" }
+        hl.TelescopePromptNormal = { bg = "NONE" }
+        hl.TelescopePromptBorder = { fg = c.cyan, bg = "NONE" }
+        hl.TelescopeResultsNormal = { bg = "NONE" }
+        hl.TelescopeResultsBorder = { fg = c.blue, bg = "NONE" }
+        hl.TelescopePreviewNormal = { bg = "NONE" }
+        hl.TelescopePreviewBorder = { fg = c.base02 or c.border, bg = "NONE" }
+        hl.WhichKeyFloat = { bg = "NONE" }
+        hl.WhichKeyBorder = { fg = c.blue, bg = "NONE" }
+        hl.LineNr = { fg = c.base01, bg = "NONE" }
+        hl.CursorLineNr = { fg = c.blue, bg = "NONE", bold = true }
+        hl.SignColumn = { bg = "NONE" }
+        hl.FoldColumn = { bg = "NONE" }
+        hl.EndOfBuffer = { fg = c.base02, bg = "NONE" }
+        hl.WinSeparator = { fg = c.base02 or c.border, bg = "NONE" }
+        hl.CopilotSuggestion = { fg = c.base01, italic = true }
+      end,
     },
     config = function(_, opts)
-      require("catppuccin").setup(opts)
+      require("solarized-osaka").setup(opts)
 
       -- Detect system light/dark preference
       local function detect_system_theme()
@@ -88,16 +92,15 @@ return {
 
       local function apply_theme(target)
         if target and (target == "light" or target == "dark") then
-          if vim.o.background ~= target then
-            vim.o.background = target
-            vim.cmd.colorscheme("catppuccin")
-          end
+          vim.o.background = target
+          pcall(vim.cmd.colorscheme, "solarized-osaka")
         end
       end
 
       -- Set theme on startup
-      vim.o.background = detect_system_theme()
-      vim.cmd.colorscheme("catppuccin")
+      local current = detect_system_theme()
+      vim.o.background = current
+      pcall(vim.cmd.colorscheme, "solarized-osaka")
 
       -- Real-time reactive theme watcher (inotify via libuv)
       local uv = vim.uv or vim.loop
@@ -120,36 +123,24 @@ return {
       -- Command to toggle theme manually (syncs with Kitty and Tmux)
       vim.api.nvim_create_user_command("ThemeToggle", function()
         local new_theme = vim.o.background == "dark" and "light" or "dark"
-        vim.o.background = new_theme
-        vim.cmd.colorscheme("catppuccin")
-        local script = vim.fn.expand("~/dotfiles/scripts/theme-manager.sh")
+        apply_theme(new_theme)
+        local script = vim.fn.exepath("theme-manager")
+        if script == "" or not script then
+          script = vim.fn.expand("~/dotfiles/scripts/theme-manager.sh")
+        end
         if vim.fn.executable(script) == 1 then
           vim.fn.jobstart({ script, new_theme, "false" })
         end
-        vim.notify(
-          "Appearance: Catppuccin " .. (new_theme == "light" and "Latte (Light)" or "Mocha (Dark)"),
-          vim.log.levels.INFO
-        )
-      end, { desc = "Toggle between Dark (Mocha) and Light (Latte) themes across Neovim, Kitty, and Tmux" })
+        vim.notify("Appearance: Solarized Osaka " .. (new_theme == "light" and "Light" or "Dark"), vim.log.levels.INFO)
+      end, { desc = "Toggle between Dark and Light Solarized Osaka themes" })
     end,
   },
 
   {
-    "f-person/auto-dark-mode.nvim",
-    event = "VeryLazy",
-    opts = {
-      update_interval = 2000,
-      set_dark_mode = function()
-        vim.api.nvim_set_option_value("background", "dark", {})
-        vim.cmd("colorscheme catppuccin")
-      end,
-      set_light_mode = function()
-        vim.api.nvim_set_option_value("background", "light", {})
-        vim.cmd("colorscheme catppuccin")
-      end,
-    },
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = true,
   },
-
 
   {
     "nvim-lualine/lualine.nvim",
@@ -158,7 +149,7 @@ return {
     },
     opts = {
       options = {
-        theme = "auto",
+        theme = "solarized-osaka",
         globalstatus = true,
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },
@@ -239,5 +230,3 @@ return {
     },
   },
 }
-
-

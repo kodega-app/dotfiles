@@ -91,6 +91,3 @@ for _, p in ipairs(extra_paths) do
     vim.env.PATH = p .. ":" .. (vim.env.PATH or "")
   end
 end
-
-
-

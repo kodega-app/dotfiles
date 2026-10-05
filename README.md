@@ -13,7 +13,11 @@ Modern, high-performance developer dotfiles configured for Linux and macOS.
 | **JSON / JSONC / JSON5** | `jsonls` | `prettier` | SchemaStore validation (`package.json`, `tsconfig.json`, `.prettierrc`, etc.) |
 | **Markdown** | `marksman` | `prettier` | Heading styling, GitHub callouts (`[!NOTE]`, `[!TIP]`, `[!WARNING]`), Obsidian notes, interactive checkboxes |
 | **Docker & Compose** | `dockerls`, `docker_compose_language_service` | — | Dockerfile & compose validation |
-| **YAML & Helm** | `yamlls`, `helm_ls` | `prettier` | Kubernetes & GitHub Actions schema support, Helm template support |
+| **Ansible** | `ansiblels` | `ansible-lint` | Playbook/role validation, syntax checking, task and module auto-completion |
+| **Helm** | `helm_ls` | `prettier` | Chart linting, values auto-completion, Go template syntax, Helm CLI integration |
+| **Jenkins** | `groovy` (Treesitter) | `npm-groovy-lint` | Jenkinsfile declarative & scripted pipeline syntax, formatting, and linting |
+| **Kubernetes & GitOps** | `yamlls`, `helm_ls` | `prettier` | Kubernetes manifests, CRDs, Argo CD, Flux, K9s management |
+| **YAML & CloudFormation** | `yamlls` | `prettier` | Kubernetes & GitHub Actions schema support, AWS CFN custom tags |
 | **Bash / Shell** | `bashls` | `shfmt` | Shell script linting and formatting |
 | **Lua** | `lua_ls` | `stylua` | Neovim Lua API completions and type diagnostics |
 
@@ -23,12 +27,13 @@ Modern, high-performance developer dotfiles configured for Linux and macOS.
 
 ```
 ~/dotfiles/
-├── nvim/                   # Neovim configuration (Lazy.nvim, Treesitter, LSP, Conform)
+├── nvim/                   # Neovim configuration (LazyVim, Treesitter, LSP, Conform)
 │   ├── init.lua
 │   ├── lazy-lock.json
-│   └── lua/kode/
-│       ├── core/           # Options, Keymaps, Autocmds
-│       └── plugins/        # LSP, Completion, Treesitter, Formatting, UI, etc.
+│   ├── lazyvim.json
+│   └── lua/
+│       ├── config/         # Options, Keymaps, Autocmds, Lazy bootstrap
+│       └── plugins/        # Custom plugins & theme overrides
 ├── tmux/                   # Tmux configuration (tmux.conf)
 ├── kitty/                  # Kitty terminal emulator configuration
 ├── lazygit/                # LazyGit configuration
@@ -130,3 +135,27 @@ Prefix Key: `Ctrl + a`
 | `Prefix + ,` | Rename window |
 | `Prefix + x` | Close current pane |
 | `Prefix + r` | Reload tmux configuration |
+
+---
+
+### DevOps & Cloud Native Shell Shortcuts
+
+| Command / Alias | Tool | Description |
+| :--- | :--- | :--- |
+| `a` / `ap` | Ansible | `ansible` / `ansible-playbook` |
+| `apc` / `apv` | Ansible | Dry run check (`--check --diff`) / Syntax check (`--syntax-check`) |
+| `avi` / `alint` | Ansible | `ansible-vault` / `ansible-lint` |
+| `ans-ping [host]` | Ansible | Ping hosts in inventory |
+| `h` / `hls` / `hlsa` | Helm | `helm` / List releases / List in all namespaces |
+| `hi` / `hu` / `hdel` | Helm | Install chart / Upgrade or install / Uninstall release |
+| `ht` / `hval` | Helm | Template render / Lint chart |
+| `hdep` / `hdiff` | Helm | Build dependencies / Diff release against cluster |
+| `k` / `kg` / `kgp` | Kubernetes | `kubectl` / `get` / `get pods` |
+| `klf` / `ka` / `kd` | Kubernetes | Logs follow / Apply manifest / Delete manifest |
+| `k9` / `kx` / `kns` | Kubernetes | Launch `k9s` TUI / Switch context (`kubectx`) / Switch namespace (`kubens`) |
+| `jval [file]` | Jenkins | Validate Jenkinsfile syntax via remote Jenkins API or local linter |
+| `argo` / `flux-get` | GitOps | `argocd` CLI / Inspect Flux resources |
+| `trivy-img` / `trivy-fs` | Security | Scan container image / Scan filesystem for vulnerabilities & misconfigurations |
+| `checkov-dir` | Security | Scan IaC templates (Terraform, CloudFormation, Helm, K8s) |
+| `act-dry` / `act-job` | CI/CD | Dry-run GitHub Actions locally / Run specific action job with `act` |
+
