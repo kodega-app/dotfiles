@@ -115,15 +115,43 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-fastfetch
-eval "$(/home/kode/.local/bin/mise activate bash)"
-export PATH="$HOME/.local/bin:$PATH"
-eval "$(mise activate bash)"
+# ------------------------------------------------------------------------------
+# Environment & PATH Setup
+# ------------------------------------------------------------------------------
+# Homebrew environment
+if [ -x "/opt/homebrew/bin/brew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
+# PATH deduplication and prioritization
+for p in "$HOME/.local/share/mise/shims" "$HOME/.local/bin" "$HOME/go/bin" "$HOME/.lmstudio/bin" "/opt/nvim-linux-x86_64/bin"; do
+    if [ -d "$p" ] && [[ ":$PATH:" != *":$p:"* ]]; then
+        PATH="$p:$PATH"
+    fi
+done
+export PATH
 
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Default Editor
+export EDITOR="nvim"
+export VISUAL="nvim"
 
-# Added by LM Studio CLI tool (lms)
-export PATH="$PATH:/home/kode/.lmstudio/bin"
+# Mise toolchain version manager activation
+if command -v mise &>/dev/null; then
+    eval "$(mise activate bash)"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+    eval "$("$HOME/.local/bin/mise" activate bash)"
+fi
+
+# Load shared developer aliases (Docker, K8s, Terraform, Go, Git)
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh" ]; then
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliases.sh"
+elif [ -f "$HOME/dotfiles/shell-config-minimal.zsh" ]; then
+    source "$HOME/dotfiles/shell-config-minimal.zsh"
+fi
+
+# Display fastfetch on initial interactive shell (skip in tmux subpanes)
+if [[ $- == *i* ]] && command -v fastfetch &>/dev/null && [ -z "${TMUX:-}" ]; then
+    fastfetch
+fi

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Theme Manager: Dynamic Light / Dark Appearance Switcher
-# Synchronizes Catppuccin Mocha (Dark) and Catppuccin Latte (Light)
-# across Kitty, Tmux, and Neovim automatically based on system appearance.
+# Synchronizes distinct colorschemes across Kitty, Tmux, and Neovim:
+# - Kitty:  Rosé Pine (Main / Dawn)
+# - Tmux:   Rosé Pine (Main / Dawn)
+# - Neovim: Rosé Pine (Main / Dawn)
 # ==============================================================================
 
 set -euo pipefail
@@ -11,6 +13,15 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
 THEME_CACHE_FILE="$CACHE_DIR/theme"
+
+# Distinct Colorscheme Definitions (Rosé Pine)
+# 1. Kitty Terminal
+KITTY_THEME_DARK="rose-pine.conf"
+KITTY_THEME_LIGHT="rose-pine-dawn.conf"
+
+# 2. Tmux Multiplexer
+TMUX_THEME_DARK="rose-pine.conf"
+TMUX_THEME_LIGHT="rose-pine-dawn.conf"
 
 mkdir -p "$CACHE_DIR" "$CONFIG_DIR/kitty" "$CONFIG_DIR/tmux"
 
@@ -75,7 +86,7 @@ get_current_theme() {
     fi
 
     if [ -f "$CONFIG_DIR/kitty/current-theme.conf" ]; then
-        if grep -q "catppuccin-latte" "$CONFIG_DIR/kitty/current-theme.conf"; then
+        if grep -qE "rose-pine-dawn|solarized-osaka-light|catppuccin-latte" "$CONFIG_DIR/kitty/current-theme.conf"; then
             echo "light"
             return
         fi
@@ -93,10 +104,34 @@ ensure_theme_links() {
     fi
 }
 
+set_desktop_theme() {
+    local target="$1"
+    # Update COSMIC desktop setting if directory exists
+    local cosmic_is_dark_file="$CONFIG_DIR/cosmic/com.system76.CosmicTheme.Mode/v1/is_dark"
+    if [ -d "$(dirname "$cosmic_is_dark_file")" ]; then
+        if [ "$target" = "dark" ]; then
+            echo "true" > "$cosmic_is_dark_file" 2>/dev/null || true
+        else
+            echo "false" > "$cosmic_is_dark_file" 2>/dev/null || true
+        fi
+    fi
+
+    # Update GNOME / FreeDesktop gsettings if available
+    if command -v gsettings &>/dev/null; then
+        local pref="prefer-$target"
+        gsettings set org.gnome.desktop.interface color-scheme "$pref" 2>/dev/null || true
+    fi
+}
+
 set_theme() {
     local target="$1" # "dark" or "light"
     local notify="${2:-true}" # whether to send notification
+    local sync_desktop="${3:-false}" # whether to sync desktop appearance
     ensure_theme_links
+
+    if [ "$sync_desktop" = "true" ]; then
+        set_desktop_theme "$target"
+    fi
 
     # Write atomic cache file for Neovim / Tmux instant polling & inotify watcher
     local tmp_cache="${THEME_CACHE_FILE}.tmp.$$"
@@ -105,44 +140,44 @@ set_theme() {
 
     if [ "$target" = "light" ]; then
         # 1. Kitty: Update theme config and signal all running instances
-        echo "include themes/catppuccin-latte.conf" > "$CONFIG_DIR/kitty/current-theme.conf"
+        echo "include themes/$KITTY_THEME_LIGHT" > "$CONFIG_DIR/kitty/current-theme.conf"
         # Notify kitty via SIGUSR1 (native reload) and remote control
         pkill -SIGUSR1 -u "$USER" -x kitty 2>/dev/null || true
-        if command -v kitty &>/dev/null; then
-            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/catppuccin-latte.conf" 2>/dev/null || true
+        if [ -n "${KITTY_LISTEN_ON:-}" ] && command -v kitty &>/dev/null; then
+            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/$KITTY_THEME_LIGHT" 2>/dev/null || true
         fi
 
-        # 2. Tmux: Source latte theme across all active sessions
+        # 2. Tmux: Source Rosé Pine Dawn theme across all active sessions
         if [ -n "${TMUX:-}" ] || tmux info &>/dev/null; then
-            tmux source-file "$CONFIG_DIR/tmux/themes/latte.conf" 2>/dev/null || true
+            tmux source-file "$CONFIG_DIR/tmux/themes/$TMUX_THEME_LIGHT" 2>/dev/null || true
             tmux set-environment -g THEME "light" 2>/dev/null || true
         fi
 
         # 3. Notification
         if [ "$notify" = "true" ] && command -v notify-send &>/dev/null; then
-            notify-send -i "preferences-desktop-theme" "Appearance" "Switched to Light Theme (Catppuccin Latte)" 2>/dev/null || true
+            notify-send -i "preferences-desktop-theme" "Appearance" "Light Mode Active (Rosé Pine Dawn)" 2>/dev/null || true
         fi
-        echo "Appearance switched to: Light (Catppuccin Latte)"
+        echo "Appearance switched to: Light (Rosé Pine Dawn)"
     else
         # 1. Kitty: Update theme config and signal all running instances
-        echo "include themes/catppuccin-mocha.conf" > "$CONFIG_DIR/kitty/current-theme.conf"
+        echo "include themes/$KITTY_THEME_DARK" > "$CONFIG_DIR/kitty/current-theme.conf"
         # Notify kitty via SIGUSR1 (native reload) and remote control
         pkill -SIGUSR1 -u "$USER" -x kitty 2>/dev/null || true
-        if command -v kitty &>/dev/null; then
-            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/catppuccin-mocha.conf" 2>/dev/null || true
+        if [ -n "${KITTY_LISTEN_ON:-}" ] && command -v kitty &>/dev/null; then
+            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/$KITTY_THEME_DARK" 2>/dev/null || true
         fi
 
-        # 2. Tmux: Source mocha theme across all active sessions
+        # 2. Tmux: Source Rosé Pine theme across all active sessions
         if [ -n "${TMUX:-}" ] || tmux info &>/dev/null; then
-            tmux source-file "$CONFIG_DIR/tmux/themes/mocha.conf" 2>/dev/null || true
+            tmux source-file "$CONFIG_DIR/tmux/themes/$TMUX_THEME_DARK" 2>/dev/null || true
             tmux set-environment -g THEME "dark" 2>/dev/null || true
         fi
 
         # 3. Notification
         if [ "$notify" = "true" ] && command -v notify-send &>/dev/null; then
-            notify-send -i "preferences-desktop-theme" "Appearance" "Switched to Dark Theme (Catppuccin Mocha)" 2>/dev/null || true
+            notify-send -i "preferences-desktop-theme" "Appearance" "Dark Mode Active (Rosé Pine)" 2>/dev/null || true
         fi
-        echo "Appearance switched to: Dark (Catppuccin Mocha)"
+        echo "Appearance switched to: Dark (Rosé Pine)"
     fi
 }
 
@@ -150,9 +185,9 @@ toggle_theme() {
     local current
     current=$(get_current_theme)
     if [ "$current" = "dark" ]; then
-        set_theme "light" "true"
+        set_theme "light" "true" "true"
     else
-        set_theme "dark" "true"
+        set_theme "dark" "true" "true"
     fi
 }
 
@@ -217,10 +252,10 @@ ARG2="${2:-}"
 
 case "$ACTION" in
     dark|mocha)
-        set_theme "dark" "${ARG2:-true}"
+        set_theme "dark" "${ARG2:-true}" "true"
         ;;
     light|latte)
-        set_theme "light" "${ARG2:-true}"
+        set_theme "light" "${ARG2:-true}" "true"
         ;;
     toggle)
         toggle_theme

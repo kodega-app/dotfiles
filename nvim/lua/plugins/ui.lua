@@ -1,52 +1,55 @@
 return {
   {
-    "craftzdog/solarized-osaka.nvim",
+    "rose-pine/neovim",
+    name = "rose-pine",
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = true,
-      terminal_colors = true,
-      styles = {
-        comments = { italic = true },
-        keywords = { italic = true },
-        functions = {},
-        variables = {},
-        sidebars = "transparent",
-        floats = "transparent",
+      variant = "auto", -- auto, main, moon, or dawn
+      dark_variant = "main", -- main or moon
+      dim_inactive_windows = false,
+      extend_background_behind_borders = true,
+
+      enable = {
+        terminal = true,
+        legacy_highlights = true,
+        migrations = true,
       },
-      sidebars = { "qf", "help", "terminal", "nvim-tree" },
-      day_brightness = 0.3,
-      hide_inactive_statusline = false,
-      dim_inactive = false,
-      lualine_bold = true,
-      on_highlights = function(hl, c)
-        hl.NormalFloat = { bg = "NONE" }
-        hl.FloatBorder = { fg = c.blue, bg = "NONE" }
-        hl.FloatTitle = { fg = c.cyan, bg = "NONE", bold = true }
-        hl.NvimTreeNormal = { bg = "NONE" }
-        hl.NvimTreeNormalNC = { bg = "NONE" }
-        hl.NvimTreeWinSeparator = { fg = c.base02 or c.border, bg = "NONE" }
-        hl.TelescopeNormal = { bg = "NONE" }
-        hl.TelescopeBorder = { fg = c.blue, bg = "NONE" }
-        hl.TelescopePromptNormal = { bg = "NONE" }
-        hl.TelescopePromptBorder = { fg = c.cyan, bg = "NONE" }
-        hl.TelescopeResultsNormal = { bg = "NONE" }
-        hl.TelescopeResultsBorder = { fg = c.blue, bg = "NONE" }
-        hl.TelescopePreviewNormal = { bg = "NONE" }
-        hl.TelescopePreviewBorder = { fg = c.base02 or c.border, bg = "NONE" }
-        hl.WhichKeyFloat = { bg = "NONE" }
-        hl.WhichKeyBorder = { fg = c.blue, bg = "NONE" }
-        hl.LineNr = { fg = c.base01, bg = "NONE" }
-        hl.CursorLineNr = { fg = c.blue, bg = "NONE", bold = true }
-        hl.SignColumn = { bg = "NONE" }
-        hl.FoldColumn = { bg = "NONE" }
-        hl.EndOfBuffer = { fg = c.base02, bg = "NONE" }
-        hl.WinSeparator = { fg = c.base02 or c.border, bg = "NONE" }
-        hl.CopilotSuggestion = { fg = c.base01, italic = true }
-      end,
+
+      styles = {
+        bold = true,
+        italic = true,
+        transparency = true,
+      },
+
+      highlight_groups = {
+        NormalFloat = { bg = "NONE" },
+        FloatBorder = { fg = "pine", bg = "NONE" },
+        FloatTitle = { fg = "rose", bg = "NONE", bold = true },
+        NvimTreeNormal = { bg = "NONE" },
+        NvimTreeNormalNC = { bg = "NONE" },
+        NvimTreeWinSeparator = { fg = "highlight_med", bg = "NONE" },
+        TelescopeNormal = { bg = "NONE" },
+        TelescopeBorder = { fg = "pine", bg = "NONE" },
+        TelescopePromptNormal = { bg = "NONE" },
+        TelescopePromptBorder = { fg = "rose", bg = "NONE" },
+        TelescopeResultsNormal = { bg = "NONE" },
+        TelescopeResultsBorder = { fg = "pine", bg = "NONE" },
+        TelescopePreviewNormal = { bg = "NONE" },
+        TelescopePreviewBorder = { fg = "highlight_med", bg = "NONE" },
+        WhichKeyFloat = { bg = "NONE" },
+        WhichKeyBorder = { fg = "pine", bg = "NONE" },
+        LineNr = { fg = "muted", bg = "NONE" },
+        CursorLineNr = { fg = "rose", bg = "NONE", bold = true },
+        SignColumn = { bg = "NONE" },
+        FoldColumn = { bg = "NONE" },
+        EndOfBuffer = { fg = "muted", bg = "NONE" },
+        WinSeparator = { fg = "highlight_med", bg = "NONE" },
+        CopilotSuggestion = { fg = "muted", italic = true },
+      },
     },
     config = function(_, opts)
-      require("solarized-osaka").setup(opts)
+      require("rose-pine").setup(opts)
 
       -- Detect system light/dark preference
       local function detect_system_theme()
@@ -93,14 +96,13 @@ return {
       local function apply_theme(target)
         if target and (target == "light" or target == "dark") then
           vim.o.background = target
-          pcall(vim.cmd.colorscheme, "solarized-osaka")
+          pcall(vim.cmd.colorscheme, target == "light" and "rose-pine-dawn" or "rose-pine")
         end
       end
 
       -- Set theme on startup
       local current = detect_system_theme()
-      vim.o.background = current
-      pcall(vim.cmd.colorscheme, "solarized-osaka")
+      apply_theme(current)
 
       -- Real-time reactive theme watcher (inotify via libuv)
       local uv = vim.uv or vim.loop
@@ -131,8 +133,8 @@ return {
         if vim.fn.executable(script) == 1 then
           vim.fn.jobstart({ script, new_theme, "false" })
         end
-        vim.notify("Appearance: Solarized Osaka " .. (new_theme == "light" and "Light" or "Dark"), vim.log.levels.INFO)
-      end, { desc = "Toggle between Dark and Light Solarized Osaka themes" })
+        vim.notify("Appearance: Rosé Pine " .. (new_theme == "light" and "Dawn" or "Main"), vim.log.levels.INFO)
+      end, { desc = "Toggle between Dark and Light Rosé Pine themes" })
     end,
   },
 
@@ -149,7 +151,7 @@ return {
     },
     opts = {
       options = {
-        theme = "solarized-osaka",
+        theme = "rose-pine",
         globalstatus = true,
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },

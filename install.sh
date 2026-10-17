@@ -53,10 +53,14 @@ if [ -d "$DOTFILES_DIR/ghostty" ]; then
     ln -sf "$DOTFILES_DIR/ghostty/config" "$CONFIG_DIR/ghostty/config"
 fi
 
-# 7. Starship prompt
-if [ -f "$DOTFILES_DIR/starship/starship.toml" ]; then
-    echo "Linking Starship config..."
-    ln -sf "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml"
+# 7. Powerlevel10k prompt
+if [ -d "$HOME/.oh-my-zsh" ] && [ ! -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
+    echo "Cloning Powerlevel10k theme..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" 2>/dev/null || true
+fi
+if [ -f "$DOTFILES_DIR/zsh/.p10k.zsh" ]; then
+    echo "Linking Powerlevel10k config..."
+    ln -sf "$DOTFILES_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
 fi
 
 # 8. Shell configs
@@ -64,6 +68,8 @@ echo "Linking Shell configs..."
 ln -sf "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
 ln -sf "$DOTFILES_DIR/bash/.profile" "$HOME/.profile"
+mkdir -p "$CONFIG_DIR/shell"
+ln -sf "$DOTFILES_DIR/shell-config-minimal.zsh" "$CONFIG_DIR/shell/aliases.sh"
 
 # 9. Systemd User Services (Auto Theme Synchronizer)
 if command -v systemctl &>/dev/null && [ -d "$DOTFILES_DIR/systemd/user" ]; then

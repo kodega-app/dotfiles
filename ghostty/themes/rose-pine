@@ -1,0 +1,46 @@
+# Rosé Pine - Theme for Ghostty
+# All natural pine, faux fur and a bit of soho vibes for the classy minimalist
+
+# Base colors
+background = #191724
+foreground = #e0def4
+
+# Cursor
+cursor-color = #524f67
+cursor-text = #e0def4
+
+# Selection
+selection-background = #403d52
+selection-foreground = #e0def4
+
+# Black
+palette = 0=#26233a
+palette = 8=#6e6a86
+
+# Red
+palette = 1=#eb6f92
+palette = 9=#eb6f92
+
+# Green
+palette = 2=#31748f
+palette = 10=#31748f
+
+# Yellow
+palette = 3=#f6c177
+palette = 11=#f6c177
+
+# Blue
+palette = 4=#9ccfd8
+palette = 12=#9ccfd8
+
+# Magenta
+palette = 5=#c4a7e7
+palette = 13=#c4a7e7
+
+# Cyan
+palette = 6=#ebbcba
+palette = 14=#ebbcba
+
+# White
+palette = 7=#e0def4
+palette = 15=#e0def4

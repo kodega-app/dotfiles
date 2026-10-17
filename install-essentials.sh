@@ -65,11 +65,17 @@ go install github.com/josharian/impl@latest
 go install github.com/koron/iferr@latest
 go install github.com/cweill/gotests/...@latest
 
+# -----------------------------------------------------------------------------
+# 5. DevOps & Cloud Native CLI Tools
+# -----------------------------------------------------------------------------
+echo "Installing DevOps & Cloud Native CLI tools (Ansible, Helm, K8s, GitOps, Scanners)..."
+brew install ansible ansible-lint helm kubernetes-cli k9s kubectx trivy checkov argocd act 2>/dev/null || true
+
 # Reshim mise
 mise reshim
 
 # -----------------------------------------------------------------------------
-# 5. Link Dotfiles
+# 6. Link Dotfiles
 # -----------------------------------------------------------------------------
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo "Linking dotfiles from $DOTFILES_DIR..."

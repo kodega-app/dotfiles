@@ -27,13 +27,10 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/share/mise/shims:/home/kode/go/bin:/home/kode/.local/bin:$PATH"
-
-
-
-# Added by Antigravity CLI installer
-export PATH="/home/kode/.local/bin:$PATH"
-
-# Added by LM Studio CLI tool (lms)
-export PATH="$PATH:/home/kode/.lmstudio/bin"
+# Additional user paths
+for p in "$HOME/.local/share/mise/shims" "$HOME/go/bin" "$HOME/.lmstudio/bin" "/opt/nvim-linux-x86_64/bin"; do
+    if [ -d "$p" ] && [[ ":$PATH:" != *":$p:"* ]]; then
+        PATH="$p:$PATH"
+    fi
+done
+export PATH

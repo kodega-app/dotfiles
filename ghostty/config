@@ -2,13 +2,13 @@
 # 🌙 Ghostty Configuration - Minimal
 # ================================
 
-# Theme - Clean Catppuccin Mocha
-theme = catppuccin-mocha
+# Theme - Rosé Pine
+theme = rose-pine
 
 # Font - Clean and readable
 # Recommended: JetBrains Mono (install: brew install --cask font-jetbrains-mono)
 # Alternative: Monaspace Neon, Geist Mono, Cascadia Code
-font-family = JetBrains Mono
+font-family = GeistMono Nerd Font
 # font-family = DankMono Nerd Font Mono  # Your previous font
 font-size = 14
 font-thicken = true
@@ -25,8 +25,8 @@ scrollback-limit = 10000
 cursor-style = block
 
 # Transparency - Subtle for minimal look
-background-opacity = 0.92
-background-blur-radius = 10
+background-opacity = 0.85
+background-blur-radius = 20
 
 # Clean UI
 window-decoration = true
