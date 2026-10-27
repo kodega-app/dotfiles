@@ -1,0 +1,167 @@
+# =============================================================================
+# aerospace.toml — AeroSpace tiling WM config
+# Docs: https://nikitabobko.github.io/AeroSpace/guide
+# =============================================================================
+
+# ── Startup ───────────────────────────────────────────────────────────────────
+start-at-login = true
+
+# Run theme switcher on startup to sync dark/light with the system
+after-startup-command = ['exec-and-forget ~/.config/theme-switcher/switch-theme.sh']
+
+# ── Normalization ─────────────────────────────────────────────────────────────
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# ── Layout ────────────────────────────────────────────────────────────────────
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# ── Input ─────────────────────────────────────────────────────────────────────
+key-mapping.preset = 'qwerty'
+
+# ── Mouse ─────────────────────────────────────────────────────────────────────
+# Mouse follows focus when the focused monitor changes
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# ── Gaps ──────────────────────────────────────────────────────────────────────
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 10
+outer.bottom     = 10
+outer.top        = 10
+outer.right      = 10
+
+# ── Workspaces ────────────────────────────────────────────────────────────────
+# Named workspaces — only what's actually useful
+# 1=Terminal  2=Browser  3=Code  4=Chat  5=Notes
+# 6=Music     7=Mail     8=Design  9=Misc
+
+# ── App → Workspace assignments ───────────────────────────────────────────────
+[[on-window-detected]]
+if.app-name-regex-substring = 'Ghostty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Safari'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Google Chrome'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Firefox'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Arc'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Cursor'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Code'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Slack'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Discord'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Telegram'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Obsidian'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Spotify'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Mail'
+run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'Figma'
+run = 'move-node-to-workspace 8'
+
+# ── Main keybindings ──────────────────────────────────────────────────────────
+[mode.main.binding]
+
+# Focus (vim-style hjkl)
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Move windows (vim-style hjkl)
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Layout toggles
+alt-f         = 'layout floating tiling'       # toggle float/tile
+alt-shift-f   = 'fullscreen'                   # fullscreen
+alt-slash     = 'layout tiles horizontal vertical'
+alt-comma     = 'layout accordion horizontal vertical'
+
+# Resize
+alt-shift-minus = 'resize smart -50'
+alt-shift-equal = 'resize smart +50'
+
+# Launch terminal
+alt-enter = 'exec-and-forget open -n /Applications/Ghostty.app'
+
+# Workspace navigation
+alt-tab       = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# Switch to workspace 1–9
+alt-1 = 'workspace 1'  # Terminal
+alt-2 = 'workspace 2'  # Browser
+alt-3 = 'workspace 3'  # Code
+alt-4 = 'workspace 4'  # Chat
+alt-5 = 'workspace 5'  # Notes
+alt-6 = 'workspace 6'  # Music
+alt-7 = 'workspace 7'  # Mail
+alt-8 = 'workspace 8'  # Design
+alt-9 = 'workspace 9'  # Misc
+
+# Move window to workspace 1–9
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+# Enter service mode
+alt-shift-semicolon = 'mode service'
+
+# ── Service mode ──────────────────────────────────────────────────────────────
+[mode.service.binding]
+esc       = ['reload-config', 'mode main']                    # reload & back
+r         = ['flatten-workspace-tree', 'mode main']           # reset layout
+f         = ['layout floating tiling', 'mode main']           # toggle float
+backspace = ['close-all-windows-but-current', 'mode main']    # close others
+
+# Join containers
+alt-shift-h = ['join-with left',  'mode main']
+alt-shift-j = ['join-with down',  'mode main']
+alt-shift-k = ['join-with up',    'mode main']
+alt-shift-l = ['join-with right', 'mode main']

@@ -1,37 +1,11 @@
-# ================================
-# 🌙 Ghostty Configuration - Minimal
-# ================================
+font-family = GeistMono NFM
+font-size = 16
 
-# Theme - Rosé Pine
-theme = rose-pine
+window-padding-x = 10
+window-padding-y = 10
 
-# Font - Clean and readable
-# Recommended: JetBrains Mono (install: brew install --cask font-jetbrains-mono)
-# Alternative: Monaspace Neon, Geist Mono, Cascadia Code
-font-family = GeistMono Nerd Font
-# font-family = DankMono Nerd Font Mono  # Your previous font
-font-size = 14
-font-thicken = true
-font-feature = -liga  # Disable ligatures for minimal look
+# Optional transparency
+background-opacity = 1
 
-# Window - Minimal padding
-window-padding-x = 8
-window-padding-y = 8
-
-# Scrollback
-scrollback-limit = 10000
-
-# Cursor - Simple block
-cursor-style = block
-
-# Transparency - Subtle for minimal look
-background-opacity = 0.85
-background-blur-radius = 20
-
-# Clean UI
-window-decoration = true
-window-theme = auto
-
-# Performance
-shell-integration = detect
-shell-integration-features = cursor,sudo,title
+# Auto-follow macOS dark/light appearance
+theme = light:kanagawa-lotus,dark:kanagawa-wave

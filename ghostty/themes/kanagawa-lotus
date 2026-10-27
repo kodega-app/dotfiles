@@ -1,0 +1,33 @@
+# ==============================================================================
+# Kanagawa Lotus (Light) - Theme for Ghostty
+# Based on rebelot/kanagawa.nvim
+# ==============================================================================
+
+background = #f2ecbc
+foreground = #545464
+
+cursor-color = #1f1f28
+cursor-text = #f2ecbc
+
+selection-background = #c9cbd1
+selection-foreground = #1f1f28
+
+# Normal Colors (0-7)
+palette = 0=#1f1f28
+palette = 1=#c84053
+palette = 2=#6f894e
+palette = 3=#77713f
+palette = 4=#4d699b
+palette = 5=#624c83
+palette = 6=#597b75
+palette = 7=#8a8980
+
+# Bright Colors (8-15)
+palette = 8=#716e61
+palette = 9=#d7474b
+palette = 10=#6e915f
+palette = 11=#836f4a
+palette = 12=#5d7ea4
+palette = 13=#766b90
+palette = 14=#6693a0
+palette = 15=#545464
