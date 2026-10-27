@@ -23,18 +23,28 @@ ln -sf "$DOTFILES_DIR/tmux/tmux.conf" "$CONFIG_DIR/tmux/tmux.conf"
 ln -sf "$DOTFILES_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 ln -sfn "$DOTFILES_DIR/tmux/themes" "$CONFIG_DIR/tmux/themes"
 
-# 3. Kitty
-echo "Linking Kitty config..."
-mkdir -p "$CONFIG_DIR/kitty"
-ln -sf "$DOTFILES_DIR/kitty/kitty.conf" "$CONFIG_DIR/kitty/kitty.conf"
-ln -sf "$DOTFILES_DIR/kitty/current-theme.conf" "$CONFIG_DIR/kitty/current-theme.conf"
-ln -sfn "$DOTFILES_DIR/kitty/themes" "$CONFIG_DIR/kitty/themes"
+# 3. Ghostty
+echo "Linking Ghostty config..."
+mkdir -p "$CONFIG_DIR/ghostty"
+ln -sf "$DOTFILES_DIR/ghostty/config" "$CONFIG_DIR/ghostty/config"
+if [ -d "$DOTFILES_DIR/ghostty/themes" ]; then
+    ln -sfn "$DOTFILES_DIR/ghostty/themes" "$CONFIG_DIR/ghostty/themes"
+fi
 
-# Helper scripts
+# Clean up legacy Kitty symlinks if present
+if [ -d "$CONFIG_DIR/kitty" ]; then
+    echo "Cleaning up legacy Kitty configuration..."
+    rm -f "$CONFIG_DIR/kitty/kitty.conf" "$CONFIG_DIR/kitty/current-theme.conf" "$CONFIG_DIR/kitty/themes"
+    rmdir "$CONFIG_DIR/kitty" 2>/dev/null || true
+fi
+
+# Helper scripts & binaries
 mkdir -p "$HOME/.local/bin"
 ln -sf "$DOTFILES_DIR/scripts/theme-manager.sh" "$HOME/.local/bin/theme-manager"
 ln -sf "$DOTFILES_DIR/scripts/theme-manager.sh" "$HOME/.local/bin/switch-theme"
-
+if [ -x "/Applications/Ghostty.app/Contents/MacOS/ghostty" ]; then
+    ln -sf "/Applications/Ghostty.app/Contents/MacOS/ghostty" "$HOME/.local/bin/ghostty"
+fi
 
 # 4. LazyGit
 echo "Linking LazyGit config..."
@@ -46,14 +56,7 @@ echo "Linking Mise config..."
 mkdir -p "$CONFIG_DIR/mise"
 ln -sf "$DOTFILES_DIR/mise/config.toml" "$CONFIG_DIR/mise/config.toml"
 
-# 6. Ghostty (if present)
-if [ -d "$DOTFILES_DIR/ghostty" ]; then
-    echo "Linking Ghostty config..."
-    mkdir -p "$CONFIG_DIR/ghostty"
-    ln -sf "$DOTFILES_DIR/ghostty/config" "$CONFIG_DIR/ghostty/config"
-fi
-
-# 7. Powerlevel10k prompt
+# 6. Powerlevel10k prompt
 if [ -d "$HOME/.oh-my-zsh" ] && [ ! -d "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
     echo "Cloning Powerlevel10k theme..."
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$HOME/.oh-my-zsh/custom/themes/powerlevel10k" 2>/dev/null || true
@@ -63,7 +66,7 @@ if [ -f "$DOTFILES_DIR/zsh/.p10k.zsh" ]; then
     ln -sf "$DOTFILES_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
 fi
 
-# 8. Shell configs
+# 7. Shell configs
 echo "Linking Shell configs..."
 ln -sf "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
@@ -71,7 +74,7 @@ ln -sf "$DOTFILES_DIR/bash/.profile" "$HOME/.profile"
 mkdir -p "$CONFIG_DIR/shell"
 ln -sf "$DOTFILES_DIR/shell-config-minimal.zsh" "$CONFIG_DIR/shell/aliases.sh"
 
-# 9. Systemd User Services (Auto Theme Synchronizer)
+# 8. Systemd User Services (Auto Theme Synchronizer for Linux)
 if command -v systemctl &>/dev/null && [ -d "$DOTFILES_DIR/systemd/user" ]; then
     echo "Configuring Theme Synchronizer background service..."
     mkdir -p "$CONFIG_DIR/systemd/user"
@@ -87,4 +90,3 @@ echo ""
 echo "=========================================="
 echo " Dotfiles setup complete!"
 echo "=========================================="
-

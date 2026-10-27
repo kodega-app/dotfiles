@@ -1,5 +1,5 @@
 [Unit]
-Description=Dynamic Light/Dark Theme Synchronizer for Kitty, Tmux, and Neovim
+Description=Dynamic Light/Dark Theme Synchronizer for Ghostty, Tmux, and Neovim
 Documentation=https://github.com/kodega2016/dotfiles
 After=graphical-session.target xdg-desktop-portal.service
 

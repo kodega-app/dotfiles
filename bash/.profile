@@ -1,3 +1,7 @@
+# The following lines were added by Docker Desktop to add commands to your PATH.
+export PATH="$PATH:/Users/kode/.docker/bin"
+# End of Docker Desktop section.
+
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -34,3 +38,7 @@ for p in "$HOME/.local/share/mise/shims" "$HOME/go/bin" "$HOME/.lmstudio/bin" "/
     fi
 done
 export PATH
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/kode/.local/bin:$PATH"

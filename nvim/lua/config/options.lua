@@ -1,5 +1,7 @@
 local opt = vim.opt
 
+opt.guifont = "Monoid Nerd Font Mono:h14"
+
 opt.number = true
 opt.relativenumber = true
 

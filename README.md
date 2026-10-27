@@ -35,10 +35,9 @@ Modern, high-performance developer dotfiles configured for Linux and macOS.
 │       ├── config/         # Options, Keymaps, Autocmds, Lazy bootstrap
 │       └── plugins/        # Custom plugins & theme overrides
 ├── tmux/                   # Tmux configuration (tmux.conf)
-├── kitty/                  # Kitty terminal emulator configuration
+├── ghostty/                # Ghostty terminal emulator configuration
 ├── lazygit/                # LazyGit configuration
 ├── mise/                   # Mise tool version manager config (Go, Node, Python, Tofu, Terraform)
-├── ghostty/                # Ghostty terminal config & themes
 ├── zsh/                    # Zsh shell configuration (.zshrc)
 ├── bash/                   # Bash configuration (.bashrc, .profile)
 ├── install.sh              # Dotfiles symlink & setup script
@@ -118,6 +117,22 @@ Leader Key: `Space` (`<leader>`)
 | `<C-\>` | Normal/Term | Toggle terminal |
 | `<leader>ch` | Normal | Toggle Markdown / Obsidian checkbox |
 | `<leader>cc` | Normal | Toggle Copilot Chat |
+
+---
+
+### Ghostty Terminal
+
+| Key | Description |
+| :--- | :--- |
+| `Cmd + d` | Split surface vertically (right) |
+| `Cmd + Shift + d` | Split surface horizontally (down) |
+| `Cmd + [` / `Cmd + ]` | Navigate previous / next split |
+| `Cmd + Shift + Enter` | Toggle split zoom |
+| `Cmd + t` | Create new tab |
+| `Cmd + 1-9` | Switch directly to tab 1-9 |
+| `Cmd + w` | Close active split / surface |
+| `Cmd + Shift + r` | Reload configuration |
+| `Cmd + ,` | Open configuration file |
 
 ---
 

@@ -155,3 +155,7 @@ fi
 if [[ $- == *i* ]] && command -v fastfetch &>/dev/null && [ -z "${TMUX:-}" ]; then
     fastfetch
 fi
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/kode/.local/bin:$PATH"

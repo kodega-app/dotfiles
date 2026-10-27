@@ -41,10 +41,15 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# 2. Core CLI Tools
+# 2. Core CLI Tools & Terminal
 # -----------------------------------------------------------------------------
 echo "Installing core CLI tools..."
 brew install git curl wget ripgrep fd fzf bat tree-sitter neovim tmux lazygit mise fastfetch
+
+if [ "$PLATFORM" = "macos" ]; then
+    echo "Installing Ghostty and Monoid Nerd Font..."
+    brew install --cask ghostty font-monoid-nerd-font 2>/dev/null || true
+fi
 
 # -----------------------------------------------------------------------------
 # 3. Development Toolchains via Mise

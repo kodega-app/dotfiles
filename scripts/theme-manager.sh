@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Theme Manager: Dynamic Light / Dark Appearance Switcher
-# Synchronizes distinct colorschemes across Kitty, Tmux, and Neovim:
-# - Kitty:  Rosé Pine (Main / Dawn)
-# - Tmux:   Rosé Pine (Main / Dawn)
-# - Neovim: Rosé Pine (Main / Dawn)
+# Synchronizes distinct colorschemes across Ghostty, Tmux, and Neovim:
+# - Ghostty: Solarized Osaka (Dark / Light)
+# - Tmux:    Solarized Osaka (Dark / Light)
+# - Neovim:  Solarized Osaka (Dark / Light)
 # ==============================================================================
 
 set -euo pipefail
@@ -14,19 +14,25 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
 THEME_CACHE_FILE="$CACHE_DIR/theme"
 
-# Distinct Colorscheme Definitions (Rosé Pine)
-# 1. Kitty Terminal
-KITTY_THEME_DARK="rose-pine.conf"
-KITTY_THEME_LIGHT="rose-pine-dawn.conf"
+# Distinct Colorscheme Definitions (Solarized Osaka)
+# 1. Tmux Multiplexer
+TMUX_THEME_DARK="solarized-osaka.conf"
+TMUX_THEME_LIGHT="solarized-osaka-light.conf"
 
-# 2. Tmux Multiplexer
-TMUX_THEME_DARK="rose-pine.conf"
-TMUX_THEME_LIGHT="rose-pine-dawn.conf"
-
-mkdir -p "$CACHE_DIR" "$CONFIG_DIR/kitty" "$CONFIG_DIR/tmux"
+mkdir -p "$CACHE_DIR" "$CONFIG_DIR/ghostty" "$CONFIG_DIR/tmux"
 
 # Detect system appearance: "light" or "dark"
 get_system_theme() {
+    # 0. Check macOS appearance (Darwin)
+    if [ "$(uname -s)" = "Darwin" ]; then
+        if defaults read -g AppleInterfaceStyle &>/dev/null; then
+            echo "dark"
+        else
+            echo "light"
+        fi
+        return
+    fi
+
     # 1. Check COSMIC desktop setting if available
     local cosmic_is_dark_file="$CONFIG_DIR/cosmic/com.system76.CosmicTheme.Mode/v1/is_dark"
     if [ -f "$cosmic_is_dark_file" ]; then
@@ -85,28 +91,36 @@ get_current_theme() {
         fi
     fi
 
-    if [ -f "$CONFIG_DIR/kitty/current-theme.conf" ]; then
-        if grep -qE "rose-pine-dawn|solarized-osaka-light|catppuccin-latte" "$CONFIG_DIR/kitty/current-theme.conf"; then
-            echo "light"
-            return
-        fi
-    fi
-    echo "dark"
+    get_system_theme
 }
 
 ensure_theme_links() {
-    mkdir -p "$CONFIG_DIR/kitty" "$CONFIG_DIR/tmux"
-    if [ ! -e "$CONFIG_DIR/kitty/themes" ]; then
-        ln -sfn "$DOTFILES_DIR/kitty/themes" "$CONFIG_DIR/kitty/themes"
+    mkdir -p "$CONFIG_DIR/ghostty" "$CONFIG_DIR/tmux"
+    if [ ! -e "$CONFIG_DIR/ghostty/config" ] && [ -f "$DOTFILES_DIR/ghostty/config" ]; then
+        ln -sf "$DOTFILES_DIR/ghostty/config" "$CONFIG_DIR/ghostty/config"
     fi
-    if [ ! -e "$CONFIG_DIR/tmux/themes" ]; then
+    if [ ! -e "$CONFIG_DIR/ghostty/themes" ] && [ -d "$DOTFILES_DIR/ghostty/themes" ]; then
+        ln -sfn "$DOTFILES_DIR/ghostty/themes" "$CONFIG_DIR/ghostty/themes"
+    fi
+    if [ ! -e "$CONFIG_DIR/tmux/themes" ] && [ -d "$DOTFILES_DIR/tmux/themes" ]; then
         ln -sfn "$DOTFILES_DIR/tmux/themes" "$CONFIG_DIR/tmux/themes"
     fi
 }
 
 set_desktop_theme() {
     local target="$1"
-    # Update COSMIC desktop setting if directory exists
+
+    # 1. Update macOS system appearance if on macOS
+    if [ "$(uname -s)" = "Darwin" ]; then
+        if [ "$target" = "dark" ]; then
+            osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to true' 2>/dev/null || true
+        else
+            osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to false' 2>/dev/null || true
+        fi
+        return
+    fi
+
+    # 2. Update COSMIC desktop setting if directory exists
     local cosmic_is_dark_file="$CONFIG_DIR/cosmic/com.system76.CosmicTheme.Mode/v1/is_dark"
     if [ -d "$(dirname "$cosmic_is_dark_file")" ]; then
         if [ "$target" = "dark" ]; then
@@ -116,7 +130,7 @@ set_desktop_theme() {
         fi
     fi
 
-    # Update GNOME / FreeDesktop gsettings if available
+    # 3. Update GNOME / FreeDesktop gsettings if available
     if command -v gsettings &>/dev/null; then
         local pref="prefer-$target"
         gsettings set org.gnome.desktop.interface color-scheme "$pref" 2>/dev/null || true
@@ -139,45 +153,37 @@ set_theme() {
     mv -f "$tmp_cache" "$THEME_CACHE_FILE"
 
     if [ "$target" = "light" ]; then
-        # 1. Kitty: Update theme config and signal all running instances
-        echo "include themes/$KITTY_THEME_LIGHT" > "$CONFIG_DIR/kitty/current-theme.conf"
-        # Notify kitty via SIGUSR1 (native reload) and remote control
-        pkill -SIGUSR1 -u "$USER" -x kitty 2>/dev/null || true
-        if [ -n "${KITTY_LISTEN_ON:-}" ] && command -v kitty &>/dev/null; then
-            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/$KITTY_THEME_LIGHT" 2>/dev/null || true
-        fi
-
-        # 2. Tmux: Source Rosé Pine Dawn theme across all active sessions
+        # 1. Tmux: Source Solarized Osaka Light theme across all active sessions
         if [ -n "${TMUX:-}" ] || tmux info &>/dev/null; then
             tmux source-file "$CONFIG_DIR/tmux/themes/$TMUX_THEME_LIGHT" 2>/dev/null || true
             tmux set-environment -g THEME "light" 2>/dev/null || true
         fi
 
-        # 3. Notification
-        if [ "$notify" = "true" ] && command -v notify-send &>/dev/null; then
-            notify-send -i "preferences-desktop-theme" "Appearance" "Light Mode Active (Rosé Pine Dawn)" 2>/dev/null || true
+        # 2. Notification
+        if [ "$notify" = "true" ]; then
+            if command -v notify-send &>/dev/null; then
+                notify-send -i "preferences-desktop-theme" "Appearance" "Light Mode Active (Solarized Osaka Light)" 2>/dev/null || true
+            elif [ "$(uname -s)" = "Darwin" ]; then
+                osascript -e 'display notification "Light Mode Active (Solarized Osaka Light)" with title "Appearance"' 2>/dev/null || true
+            fi
         fi
-        echo "Appearance switched to: Light (Rosé Pine Dawn)"
+        echo "Appearance switched to: Light (Solarized Osaka Light)"
     else
-        # 1. Kitty: Update theme config and signal all running instances
-        echo "include themes/$KITTY_THEME_DARK" > "$CONFIG_DIR/kitty/current-theme.conf"
-        # Notify kitty via SIGUSR1 (native reload) and remote control
-        pkill -SIGUSR1 -u "$USER" -x kitty 2>/dev/null || true
-        if [ -n "${KITTY_LISTEN_ON:-}" ] && command -v kitty &>/dev/null; then
-            kitty @ set-colors -a "$CONFIG_DIR/kitty/themes/$KITTY_THEME_DARK" 2>/dev/null || true
-        fi
-
-        # 2. Tmux: Source Rosé Pine theme across all active sessions
+        # 1. Tmux: Source Solarized Osaka theme across all active sessions
         if [ -n "${TMUX:-}" ] || tmux info &>/dev/null; then
             tmux source-file "$CONFIG_DIR/tmux/themes/$TMUX_THEME_DARK" 2>/dev/null || true
             tmux set-environment -g THEME "dark" 2>/dev/null || true
         fi
 
-        # 3. Notification
-        if [ "$notify" = "true" ] && command -v notify-send &>/dev/null; then
-            notify-send -i "preferences-desktop-theme" "Appearance" "Dark Mode Active (Rosé Pine)" 2>/dev/null || true
+        # 2. Notification
+        if [ "$notify" = "true" ]; then
+            if command -v notify-send &>/dev/null; then
+                notify-send -i "preferences-desktop-theme" "Appearance" "Dark Mode Active (Solarized Osaka)" 2>/dev/null || true
+            elif [ "$(uname -s)" = "Darwin" ]; then
+                osascript -e 'display notification "Dark Mode Active (Solarized Osaka)" with title "Appearance"' 2>/dev/null || true
+            fi
         fi
-        echo "Appearance switched to: Dark (Rosé Pine)"
+        echo "Appearance switched to: Dark (Solarized Osaka)"
     fi
 }
 
@@ -206,7 +212,7 @@ auto_theme() {
     fi
 }
 
-# Real-time background listener daemon using DBus & gsettings
+# Real-time background listener daemon using DBus & gsettings (Linux)
 listen_loop() {
     echo "Starting Theme Synchronizer listener..."
     auto_theme "false"
@@ -251,10 +257,10 @@ ACTION="${1:-auto}"
 ARG2="${2:-}"
 
 case "$ACTION" in
-    dark|mocha)
+    dark)
         set_theme "dark" "${ARG2:-true}" "true"
         ;;
-    light|latte)
+    light)
         set_theme "light" "${ARG2:-true}" "true"
         ;;
     toggle)
